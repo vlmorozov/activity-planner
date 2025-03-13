@@ -3,24 +3,14 @@ import { ref } from 'vue';
 import ActivityItem from './ActivityItem.vue';
 import ActivityForm from '@/components/activities/ActivityForm.vue';
 import { router } from '@inertiajs/vue3';
-
-interface Activity {
-    id: number;
-    title: string;
-    description: string;
-}
+import { Activity } from '@/types/activity';
 
 const props = defineProps<{ activities: Activity[] }>();
 const activities = ref([...props.activities]);
 
 const reloadActivities = () => {
-    console.log(this);
-    // activities.value = [...props.activities]; // Перерисовываем список
     router.reload({
         only: ['activities'],
-        // headers: {
-        //     'X-Custom-Header': 'value'
-        // },
         onSuccess: (page) => {
             console.log('Reload successful', page);
             activities.value = [...page.props.activities];
@@ -33,7 +23,6 @@ const reloadActivities = () => {
         }
     });
 };
-
 </script>
 
 <template>

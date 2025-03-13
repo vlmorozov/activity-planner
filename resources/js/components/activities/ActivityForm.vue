@@ -18,6 +18,7 @@ const submit = () => {
     form.post(route('activity.create'), {
         preserveScroll: true,
         onSuccess: () => {
+            form.reset();
             emit('created');
         },
     });

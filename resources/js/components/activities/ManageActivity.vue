@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import ActivityList from './ActivityList.vue';
-
-interface Activity {
-    id: number;
-    title: string;
-    description: string;
-}
+import { Activity } from '@/types/activity';
 
 const props = defineProps<{ activities: Activity[] }>();
 const activities = ref([...props.activities]);

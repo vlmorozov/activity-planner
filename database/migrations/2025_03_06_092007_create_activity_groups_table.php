@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('activity_groups', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->string('name', 256)->nullable();
             $table->foreignId('activity_id')->constrained()->onDelete('cascade');
         });
     }

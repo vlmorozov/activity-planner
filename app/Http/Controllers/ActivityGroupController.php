@@ -4,49 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreActivityGroupRequest;
 use App\Http\Requests\UpdateActivityGroupRequest;
+use App\Models\Activity;
 use App\Models\ActivityGroup;
 
 class ActivityGroupController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function store(StoreActivityGroupRequest $request, ActivityGroup $activityGroup)
     {
-        //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreActivityGroupRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(ActivityGroup $activityGroup)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ActivityGroup $activityGroup)
-    {
-        //
-    }
+//    public function show(ActivityGroup $activityGroup)
+//    {
+//        //
+//    }
 
     /**
      * Update the specified resource in storage.
