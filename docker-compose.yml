@@ -6,24 +6,24 @@ services:
         working_dir: /var/www
         volumes:
             - .:/var/www
-#        depends_on:
-#            - db
+        depends_on:
+            - db
         networks:
             - laravel_network
 
-#    db:
-#        image: mysql:8.0
-#        container_name: activity_planner_db
-#        restart: unless-stopped
-#        environment:
-#            MYSQL_DATABASE: laravel
-#            MYSQL_USER: user
-#            MYSQL_PASSWORD: password
-#            MYSQL_ROOT_PASSWORD: rootpassword
-#        ports:
-#            - "3306:3306"
-#        networks:
-#            - laravel_network
+    db:
+        image: mysql:8.0
+        container_name: activity_planner_db
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_USER: ${DB_USERNAME}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+        ports:
+            - "3306:3306"
+        networks:
+            - laravel_network
 
     nginx:
         image: nginx:latest
@@ -36,14 +36,7 @@ services:
             - app
         networks:
             - laravel_network
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.mfspace_nextjs.rule=Host(`workout.mfspace.info`)"
-            - "traefik.http.routers.mfspace_nextjs.entrypoints=websecure"
-            - "traefik.http.routers.mfspace_nextjs.tls.certresolver=myresolver"
 
 networks:
     laravel_network:
         driver: bridge
-    traefik_network:
-        external: true

@@ -1,0 +1,14 @@
+services:
+  nginx:
+    networks:
+      - traefik_network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.activity_planner_nginx.rule=Host(`workout.mfspace.info`)"
+      - "traefik.http.routers.activity_planner_nginx.entrypoints=websecure"
+      - "traefik.http.routers.activity_planner_nginx.tls.certresolver=myresolver"
+
+networks:
+  traefik_network:
+    external: true
+

@@ -22,4 +22,6 @@ jobs:
           script: |
             cd ${{ secrets.PROJECT_PATH }}
             git pull origin main
-            docker compose up -d --build
+            [ -f .env.example ] && [ ! -f .env ] && cp .env.example .env
+            [ -f docker-compose.prod.yml ] && cp docker-compose.prod.yml docker-compose.override.yml
+            docker compose down && docker compose up -d --build
