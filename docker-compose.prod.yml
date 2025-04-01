@@ -7,6 +7,7 @@ services:
       - "traefik.http.routers.activity_planner_nginx.rule=Host(`workout.mfspace.info`)"
       - "traefik.http.routers.activity_planner_nginx.entrypoints=websecure"
       - "traefik.http.routers.activity_planner_nginx.tls.certresolver=myresolver"
+      - "traefik.http.services.activity_planner_nginx.loadbalancer.server.port=80"
 
 networks:
   traefik_network:

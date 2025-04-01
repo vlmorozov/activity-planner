@@ -1,7 +1,7 @@
-# Используем официальный PHP-образ с поддержкой FPM и необходимых расширений
-FROM php:8.3-fpm
+FROM php:fpm  AS php_builder
 
-# Устанавливаем зависимости
+USER www-data
+
 RUN apt-get update && apt-get install -y \
     unzip \
     git \
@@ -14,26 +14,46 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl gd
 
-# Устанавливаем Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Устанавливаем Node.js и NPM
+# install Node.js & NPM
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs
 
-# Создаём рабочую директорию
 WORKDIR /var/www
 
-# Копируем файлы проекта
 COPY . .
 
-# Устанавливаем зависимости Laravel
+RUN usermod -u 1000 www-data && \
+    groupmod -g 1000 www-data && \
+    chown -R www-data:www-data /var/www && \
+    chmod -R 755 /var/www
+
+RUN chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+
 RUN composer install --no-dev --optimize-autoloader
 
-# Устанавливаем зависимости фронтенда (если используем Vite)
 RUN npm install && npm run build
 
-# Меняем права для storage и bootstrap/cache
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
 CMD ["php-fpm"]
+
+FROM nginx:latest AS nginx_builder
+
+USER www-data
+
+COPY nginx/conf.d/ /etc/nginx/conf.d/
+
+COPY --from=php_builder /var/www /var/www
+
+RUN chmod 777 /var/run && \
+    mkdir -p /var/run/nginx && \
+    chmod 777 /var/run/nginx && \
+    chown -R www-data:www-data /etc/nginx && chmod -R 755 /etc/nginx && \
+    mkdir -p /var/cache/nginx && chown -R www-data:www-data /var/cache/nginx
+
+RUN chmod -R 755 /var/www && chown -R www-data:www-data /var/www
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
